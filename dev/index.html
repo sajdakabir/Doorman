@@ -1,0 +1,85 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Doorman — gating harness</title>
+<style>
+  body { background:#fff; color:#111; font:14px/1.5 system-ui, sans-serif; margin:0; padding:24px 24px 80px; }
+  h1 { font-size:19px; margin:0 0 4px; }
+  p.sub { color:#666; margin:0 0 22px; }
+  .grid { display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start; }
+  figure { margin:0; }
+  figcaption { font-size:12.5px; color:#444; margin-top:6px; max-width:320px; }
+  .expect { font-weight:600; }
+  .expect.block { color:#b8412a; }
+  .expect.allow { color:#1f7a4d; }
+  video { display:block; background:#2a2f3a; border-radius:6px; }
+</style>
+
+<h1>Doorman — gating harness</h1>
+<p class="sub">Each box declares what the guard is supposed to decide. A dark “Blocked” plate should cover exactly the ones marked BLOCK.</p>
+
+<div class="grid">
+  <figure>
+    <video data-duration="8" width="360" height="200" controls></video>
+    <figcaption><span class="expect block">BLOCK</span> — 8s, 360×200, has controls. Under the 30s floor.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="29" width="360" height="200" controls></video>
+    <figcaption><span class="expect block">BLOCK</span> — 29s. Just under the floor.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="31" width="360" height="200" controls></video>
+    <figcaption><span class="expect allow">ALLOW</span> — 31s. Just over the floor.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="180" width="360" height="200" controls></video>
+    <figcaption><span class="expect allow">ALLOW</span> — 3 minutes.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="12" width="160" height="90" muted loop></video>
+    <figcaption><span class="expect allow">ALLOW</span> — 12s but only 160px wide: a hover preview, not watching.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="5" width="640" height="300" muted loop></video>
+    <figcaption><span class="expect allow">ALLOW</span> — 5s muted loop, no controls: a decorative background clip.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="20" width="640" height="480" muted controls></video>
+    <figcaption><span class="expect block">BLOCK</span> — 20s, muted but filling a big share of the viewport: reel-shaped.</figcaption>
+  </figure>
+
+  <figure>
+    <video data-duration="Infinity" width="360" height="200" controls></video>
+    <figcaption><span class="expect allow">ALLOW</span> — live stream, no real duration to measure.</figcaption>
+  </figure>
+</div>
+
+<script>
+  /* Load the extension's real sources in order, cache-busted, so the harness
+     always exercises the current code instead of whatever the browser kept. */
+  (() => {
+    const FILES = [
+      '../src/content/enforcer.js',
+      '../src/shared/defaults.js',
+      '../src/shared/sites.js',
+      'stub.js',
+      '../src/content/challenge.js',
+      '../src/content/ui.js',
+      '../src/content/guard.js'
+    ];
+    const bust = Date.now();
+    (function load(i) {
+      if (i >= FILES.length) return;
+      const el = document.createElement('script');
+      el.src = `${FILES[i]}?t=${bust}`;
+      el.onload = () => load(i + 1);
+      el.onerror = () => console.error('harness: failed to load', FILES[i]);
+      document.head.appendChild(el);
+    })(0);
+  })();
+</script>

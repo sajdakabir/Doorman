@@ -1,0 +1,54 @@
+{
+  "manifest_version": 3,
+  "name": "Doorman",
+  "version": "1.0.0",
+  "description": "Asks a few questions before it lets you in. Nothing under 30 seconds plays, and Shorts, Reels and TikTok are off limits.",
+  "minimum_chrome_version": "111",
+
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Doorman"
+  },
+
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/enforcer.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "src/shared/defaults.js",
+        "src/shared/sites.js",
+        "src/content/challenge.js",
+        "src/content/ui.js",
+        "src/content/guard.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "ISOLATED"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Doorman</title>
+<link rel="stylesheet" href="../shared/pages.css">
+<style>
+  body { width: 312px; padding: 16px; }
+  /* Three columns of ~70px of content: keep the figures on one line. */
+  .stat { padding: 10px; }
+  .stat__n { font-size: 19px; white-space: nowrap; }
+  .stat__l { font-size: 11px; line-height: 1.35; }
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  header h1 { font-size: 16px; }
+  .site { margin-top: 14px; }
+  .host { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--muted); word-break: break-all; }
+  .pass { margin-top: 12px; padding: 11px 12px; border-radius: 10px; background: #2a1a14; border: 1px solid #47281d; font-size: 13px; }
+  .pass strong { color: var(--accent); font-variant-numeric: tabular-nums; }
+  footer { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; }
+  [hidden] { display: none !important; }
+</style>
+
+<header>
+  <h1>Doorman</h1>
+  <label class="switch" title="Turn all blocking on or off">
+    <input type="checkbox" id="enabled">
+    <span></span>
+  </label>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="stat__n" id="s-blocked">0</div><div class="stat__l">blocked today</div></div>
+  <div class="stat"><div class="stat__n" id="s-unlocks">0</div><div class="stat__l">forced through</div></div>
+  <div class="stat"><div class="stat__n" id="s-waited">0s</div><div class="stat__l">spent unlocking</div></div>
+</div>
+
+<div class="pass" id="pass" hidden>
+  Unlocked here for <strong id="pass-left">0s</strong>.
+  <button class="ghost" id="relock" style="margin-top:8px;display:block">Re-lock now</button>
+</div>
+
+<div class="card site">
+  <div class="row">
+    <div class="row__text">
+      <div class="row__label">Allow short videos here</div>
+      <div class="host" id="host">—</div>
+    </div>
+    <div class="row__control">
+      <label class="switch">
+        <input type="checkbox" id="allow-site">
+        <span></span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <button class="ghost" id="open-options">All settings</button>
+  <span class="saved" id="saved">saved</span>
+</footer>
+
+<script src="../shared/defaults.js"></script>
+<script src="popup.js"></script>

@@ -1,0 +1,173 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Doorman — Settings</title>
+<link rel="stylesheet" href="../shared/pages.css">
+<style>
+  body { padding: 40px 24px 72px; }
+  main { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+  .intro p { margin-top: 8px; }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .section h2 { margin-bottom: 4px; }
+  .section > p { font-size: 12.5px; margin-bottom: 6px; }
+  .danger { display: flex; align-items: center; gap: 12px; }
+  .unit { color: var(--dim); font-size: 12.5px; margin-left: 6px; }
+  .foot { display: flex; justify-content: space-between; align-items: center; }
+</style>
+
+<main>
+  <div class="intro head">
+    <div>
+      <h1>Doorman</h1>
+      <p>Nothing under your floor plays, and talking your way in is supposed to be tedious.</p>
+    </div>
+    <label class="switch" title="Turn all blocking on or off">
+      <input type="checkbox" id="enabled">
+      <span></span>
+    </label>
+  </div>
+
+  <section class="card section">
+    <h2>What gets blocked</h2>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Minimum video length</div>
+        <div class="row__help">Anything shorter than this is stopped before it plays.</div>
+      </div>
+      <div class="row__control"><input type="number" id="minSeconds" min="1" max="3600" step="1"><span class="unit">sec</span></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Block short-form pages outright</div>
+        <div class="row__help">YouTube Shorts, Instagram Reels, TikTok, Facebook Reels, Snapchat Spotlight — blocked on sight, whatever the clip's length.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="blockShortFormPages"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Hide the entry points</div>
+        <div class="row__help">Strips Shorts shelves and Reels tabs out of the page so you never see the door.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="hideShortFormUI"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Let live streams through</div>
+        <div class="row__help">A live stream has no real length, so there is nothing to measure.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="allowLiveStreams"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Ignore videos smaller than</div>
+        <div class="row__help">Keeps hover previews, background loops and decorative clips out of it.</div>
+      </div>
+      <div class="row__control"><input type="number" id="minVideoPx" min="0" max="2000" step="10"><span class="unit">px</span></div>
+    </div>
+  </section>
+
+  <section class="card section">
+    <h2>The price of forcing it</h2>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Strict mode</div>
+        <div class="row__help">No challenge, no unlock, no way through. You would have to come back here to turn it off.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="strictMode"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">An unlock lasts</div>
+        <div class="row__help">How long one solved challenge buys you on that site before the wall comes back.</div>
+      </div>
+      <div class="row__control"><input type="number" id="passSeconds" min="5" max="3600" step="5"><span class="unit">sec</span></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Forced wait</div>
+        <div class="row__help">The countdown you have to sit through. It pauses if you switch tabs.</div>
+      </div>
+      <div class="row__control"><input type="number" id="baseWaitSeconds" min="0" max="600" step="5"><span class="unit">sec</span></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Escalate through the day</div>
+        <div class="row__help">Every unlock makes the next one longer and harder. Resets at midnight.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="escalate"><span></span></label></div>
+    </div>
+  </section>
+
+  <section class="card section">
+    <h2>Challenge steps</h2>
+    <p>At least one stays on. Turning them all off would make the block a single click.</p>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Answer for yourself</div>
+        <div class="row__help">A run of questions asking whether this really beats the alternative. Answering honestly ends it there and then.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="step-questions"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">How many questions</div>
+        <div class="row__help">Drawn fresh each time, plus one more for every unlock already spent today.</div>
+      </div>
+      <div class="row__control"><input type="number" id="questionCount" min="1" max="16" step="1"></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Write an answer</div>
+        <div class="row__help">A written answer about why you are here. Graded for effort, not content.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="step-reflect"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Wait it out</div>
+        <div class="row__help">A countdown that only runs while the tab is in front.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="step-wait"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Type a sentence</div>
+        <div class="row__help">Word for word, no pasting. Freshly worded every time.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="step-pledge"><span></span></label></div>
+    </div>
+    <div class="row">
+      <div class="row__text">
+        <div class="row__label">Do some arithmetic</div>
+        <div class="row__help">Mental maths. A wrong answer earns a new problem and a delay.</div>
+      </div>
+      <div class="row__control"><label class="switch"><input type="checkbox" id="step-math"><span></span></label></div>
+    </div>
+  </section>
+
+  <section class="card section">
+    <h2>Never block these sites</h2>
+    <p>One hostname per line. Drop the <code>www.</code> — <code>vimeo.com</code>, <code>figma.com</code>, <code>localhost</code>.</p>
+    <textarea id="allowlist" spellcheck="false" placeholder="vimeo.com"></textarea>
+  </section>
+
+  <section class="card section">
+    <h2>Since you installed this</h2>
+    <div class="stats" style="margin: 10px 0 16px">
+      <div class="stat"><div class="stat__n" id="t-blocked">0</div><div class="stat__l">videos blocked</div></div>
+      <div class="stat"><div class="stat__n" id="t-unlocks">0</div><div class="stat__l">forced through</div></div>
+      <div class="stat"><div class="stat__n" id="t-waited">0s</div><div class="stat__l">spent unlocking</div></div>
+    </div>
+    <div class="danger">
+      <button id="reset-stats" class="ghost">Reset counters</button>
+      <button id="reset-settings" class="ghost">Restore defaults</button>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span></span>
+    <span class="saved" id="saved">saved</span>
+  </div>
+</main>
+
+<script src="../shared/defaults.js"></script>
+<script src="options.js"></script>
