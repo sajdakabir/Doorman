@@ -4,6 +4,7 @@
 
   let settings = { ...NV.DEFAULTS };
   let host = '';
+  let guarded = false;
   let passExpiresAt = 0;
   let countdown = 0;
 
@@ -16,6 +17,31 @@
     settings = { ...settings, ...patch };
     await chrome.storage.local.set({ settings });
     flashSaved();
+  }
+
+  /*
+   * On a site Doorman guards you may tighten it but never loosen it. Reaching
+   * for the off switch mid-scroll is the exact moment the extension exists
+   * for, so that is the one moment it refuses. Turning it back ON, or removing
+   * an existing exemption, stays available — locking those would only ever
+   * trap you in the weaker state.
+   */
+  function applyLocks() {
+    const siteAllowed = !!host && (settings.allowlist || []).includes(host);
+    const lockMaster = guarded && settings.enabled;
+    const lockSite = guarded && !siteAllowed;
+
+    $('enabled').disabled = lockMaster;
+    $('allow-site').disabled = !host || lockSite;
+
+    const why = lockMaster
+      ? `Doorman will not let you switch it off while you are on ${host}.`
+      : lockSite
+        ? `Doorman will not let you exempt ${host} from here.`
+        : '';
+
+    $('locked').hidden = !why;
+    $('locked-why').textContent = why;
   }
 
   function renderPass() {
@@ -37,14 +63,15 @@
     } catch {}
 
     host = url && /^https?:$/.test(url.protocol) ? NV.baseHost(url.hostname) : '';
+    guarded = NV.isGuardedHost(host);
     $('host').textContent = host || 'not a web page';
-    $('allow-site').disabled = !host;
 
     const state = await chrome.runtime.sendMessage({ type: 'getState', host });
     settings = state.settings;
 
     $('enabled').checked = settings.enabled;
     $('allow-site').checked = !!host && (settings.allowlist || []).includes(host);
+    applyLocks();
 
     $('s-blocked').textContent = state.stats.blocked;
     $('s-unlocks').textContent = state.stats.unlocks;
@@ -57,14 +84,26 @@
     }
   }
 
-  $('enabled').addEventListener('change', (e) => save({ enabled: e.target.checked }));
+  $('enabled').addEventListener('change', (e) => {
+    if (guarded && !e.target.checked) {
+      e.target.checked = true; /* disabled inputs do not fire, but be certain */
+      applyLocks();
+      return;
+    }
+    save({ enabled: e.target.checked }).then(applyLocks);
+  });
 
   $('allow-site').addEventListener('change', (e) => {
     if (!host) return;
+    if (guarded && e.target.checked) {
+      e.target.checked = false;
+      applyLocks();
+      return;
+    }
     const list = new Set(settings.allowlist || []);
     if (e.target.checked) list.add(host);
     else list.delete(host);
-    save({ allowlist: [...list] });
+    save({ allowlist: [...list] }).then(applyLocks);
   });
 
   $('relock').addEventListener('click', async () => {

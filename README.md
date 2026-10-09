@@ -75,8 +75,22 @@ Click the icon, then **All settings**. You can change:
 There are two harder steps you can turn on if the questions get too easy:
 typing out a sentence word for word, and doing maths in your head.
 
-You can turn the whole thing off from the popup whenever you want. It is your
-tool.
+### You cannot switch it off from YouTube
+
+On a site Doorman guards — YouTube, Instagram, TikTok, Facebook, Snapchat —
+the switches in the popup are locked. You cannot turn Doorman off, and you
+cannot add the site to the allow list, while you are standing on it.
+
+Reaching for the off switch halfway through a reel is the exact moment the
+extension exists for, so that is the one moment it says no.
+
+You can always make it stricter from anywhere: turning Doorman back **on**, or
+removing a site that is already allowed, works everywhere. Only loosening is
+blocked, and only on the sites it guards. Anywhere else, both switches behave
+normally.
+
+To turn it off properly, open **All settings** — which takes a deliberate
+visit, rather than one thumb movement without thinking.
 
 ## For developers
 

@@ -86,6 +86,12 @@ NV.matchSite = function matchSite(loc) {
   return NV.SITES.find((s) => s.hosts && s.hosts.test(host)) || null;
 };
 
+/* True for the sites Doorman has rules for — the places the habit lives.
+ * Used to refuse switching Doorman off while you are standing at the door. */
+NV.isGuardedHost = function isGuardedHost(hostname) {
+  return !!NV.matchSite({ hostname: hostname || '' });
+};
+
 NV.isShortFormPage = function isShortFormPage(loc) {
   const site = NV.matchSite(loc);
   if (!site || !site.pagePattern) return null;

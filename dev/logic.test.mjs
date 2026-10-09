@@ -73,6 +73,28 @@ t('lookalike hosts do not match', () => {
   assert.equal(NV.matchSite({ hostname: 'youtube.com.evil.net' }), null);
 });
 
+console.log('guarded hosts');
+t('the doomscroll sites are guarded', () => {
+  for (const h of ['youtube.com', 'www.youtube.com', 'm.youtube.com',
+                   'instagram.com', 'tiktok.com', 'facebook.com',
+                   'snapchat.com', 'youtubekids.com']) {
+    assert.equal(NV.isGuardedHost(h), true, `${h} should be guarded`);
+  }
+});
+t('ordinary sites are not guarded', () => {
+  for (const h of ['vimeo.com', 'github.com', 'localhost', '', 'notyoutube.com']) {
+    assert.equal(NV.isGuardedHost(h), false, `${h} should not be guarded`);
+  }
+});
+t('a guarded host is exactly one with a site rule', () => {
+  for (const site of NV.SITES) {
+    const sample = site.id === 'youtube-kids' ? 'youtubekids.com' : `${site.id}.com`;
+    if (NV.matchSite({ hostname: sample })) {
+      assert.equal(NV.isGuardedHost(sample), true);
+    }
+  }
+});
+
 console.log('host normalisation');
 t('www/m prefixes collapse', () => {
   assert.equal(NV.baseHost('www.YouTube.com'), 'youtube.com');
